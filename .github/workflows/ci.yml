@@ -1,0 +1,53 @@
+
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        
+      - name: Setup Go
+        uses: actions/setup-go@v2.1.1
+        with:
+          go-version: 1.15
+          
+     # install kubectl
+      - name: Install kubectl
+        run: |
+          curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+          chmod +x ./kubectl
+          sudo mv ./kubectl /usr/bin/kubectl
+          
+
+      - name: Setup - build KinD cluster for k8s 1.19
+        run: |
+          make k8s119
+          make cluster
+
+
+      - name: Docker image and load into cluster
+        run: |
+          make 
+          make kind
+          make load
+
+
+      - name: See if we can load test1.yaml
+        run: |
+          sleep 120
+          kubectl apply -f test-pods/test1.yaml |grep 'created'
+       
+
