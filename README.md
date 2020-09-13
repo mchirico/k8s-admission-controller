@@ -1,3 +1,4 @@
+![CI](https://github.com/mchirico/k8s-admission-controller/workflows/CI/badge.svg)
 # Reference: [TGIK](https://youtu.be/RVDK0m2XQeg?list=PL7bmigfV0EqQzxcNpmcdTJ9eFRPBe-iZa&t=1182)
 
 # Steps to Test
