@@ -38,16 +38,21 @@ jobs:
           make cluster
 
 
-      - name: Docker image and load into cluster
+      - name: Docker image and load Docker image into KinD
         run: |
           make 
           make kind
+
+
+      - name: Sleep 2 min, then load into k8s
+        run: |
+          sleep 120
           make load
+          sleep 60	  
 
 
       - name: See if we can load test1.yaml
         run: |
-          sleep 120
           kubectl apply -f test-pods/test1.yaml |grep 'created'
        
 

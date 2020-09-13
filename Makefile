@@ -26,7 +26,6 @@ curltest:
 .PHONY: load
 load:
 	kubectl apply -f warden-k8s.yaml
-	sleep 10
 	kubectl apply -f webhook.yaml
 
 
