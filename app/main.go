@@ -47,7 +47,7 @@ func checkHeader(r *http.Request) error {
 	return errors.New("Header blank")
 }
 
-func lookforbilling(r *http.Request) (string, error) {
+func LookForBillingLabel(r *http.Request) (string, error) {
 	data, err := decodeJSON(r)
 	v := `{"apiVersion": "admission.k8s.io/v1","kind": "AdmissionReview","response": {"allowed": %t, "uid": %s, "status": {"message": %q}}})`
 
@@ -72,7 +72,7 @@ func LogAllData(r *http.Request) {
 	log.Println("dump: ", string(dump))
 }
 
-func validate(w http.ResponseWriter, r *http.Request) {
+func Validate(w http.ResponseWriter, r *http.Request) {
 
 	LogAllData(r)
 	err := checkHeader(r)
@@ -80,7 +80,7 @@ func validate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data, err := lookforbilling(r)
+	data, err := LookForBillingLabel(r)
 	if err != nil {
 		return
 	}
@@ -95,7 +95,7 @@ func main() {
 		panic(err)
 	}
 
-	http.HandleFunc("/validate", validate)
+	http.HandleFunc("/Validate", Validate)
 
 	log.Printf("About to listen on 5000. Go to https://%s:5000/", name)
 	err = http.ListenAndServeTLS(":5000", "./certs/server_certificate.pem", "./certs/server_key.pem", nil)
