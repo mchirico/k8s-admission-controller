@@ -64,9 +64,19 @@ func validate(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
+	v := `
+{"apiVersion": "admission.k8s.io/v1", 
+"kind": "AdmissionReview", 
+"response": {"allowed": %t, "uid": %d, "status": {"message": %s}}})
+`
+
 	msg := fmt.Sprintf("\nhere:\n%v:",string(dump))
-	log.Println("-->",data.Request.UID)
+
+	log.Println("-->",data.Request.UID,data.Request.Object.Metadata.Labels)
+	log.Println("2-->",data.Request.Object.Metadata.Labels)
+
 	io.WriteString(w, msg)
+	fmt.Println(v)
 }
 
 func main() {

@@ -26,3 +26,17 @@ func Test(t *testing.T) {
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Printf("%v\n",string(body))
 }
+func TestNoLabel(t *testing.T) {
+
+	s := `{"request":{"uid": "1","object":{"metadata":{"labels":{"stuff":"y"}}}}}`
+
+	bodyReader := strings.NewReader(s)
+	req := httptest.NewRequest("POST", "/validate", bodyReader)
+	req.Header.Set("Content-Type","application/json")
+	w := httptest.NewRecorder()
+	validate(w, req)
+
+	resp := w.Result()
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Printf("%v\n",string(body))
+}
