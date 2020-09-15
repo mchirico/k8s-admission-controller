@@ -26,7 +26,7 @@ func Test(t *testing.T) {
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Printf("%v\n",string(body))
 }
-func TestNoLabel(t *testing.T) {
+func TestBroken(t *testing.T) {
 
 	s := `{"request":{"uid": "1","object":{"metadata":{"labels":{"stuff":"y"}}}}}`
 
