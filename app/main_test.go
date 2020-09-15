@@ -4,13 +4,15 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http/httptest"
+	"reflect"
 	"strings"
 	"testing"
 )
+
 /*
 Ref:
 https://play.golang.org/p/eQv_QouLnME
- */
+*/
 
 func Test(t *testing.T) {
 
@@ -18,13 +20,20 @@ func Test(t *testing.T) {
 
 	bodyReader := strings.NewReader(s)
 	req := httptest.NewRequest("POST", "/validate", bodyReader)
-	req.Header.Set("Content-Type","application/json")
+	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
 	validate(w, req)
 
 	resp := w.Result()
 	body, _ := ioutil.ReadAll(resp.Body)
-	fmt.Printf("%v\n",string(body))
+
+	expected := `{"apiVersion": "admission.k8s.io/v1","kind": "AdmissionReview","response": {"allowed": true, "uid": 1, "status": {"message": "valid"}}})`
+
+	if !reflect.DeepEqual(string(body), expected) {
+		t.Fatalf("\nexpected: ->%s\ngot: %s\n", expected, body)
+	}
+
+	fmt.Printf("%v\n", string(body))
 }
 func TestBroken(t *testing.T) {
 
@@ -32,11 +41,18 @@ func TestBroken(t *testing.T) {
 
 	bodyReader := strings.NewReader(s)
 	req := httptest.NewRequest("POST", "/validate", bodyReader)
-	req.Header.Set("Content-Type","application/json")
+	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
 	validate(w, req)
 
 	resp := w.Result()
 	body, _ := ioutil.ReadAll(resp.Body)
-	fmt.Printf("%v\n",string(body))
+
+	expected := `{"apiVersion": "admission.k8s.io/v1","kind": "AdmissionReview","response": {"allowed": false, "uid": 1, "status": {"message": "Not valid"}}})`
+	if !reflect.DeepEqual(string(body), expected) {
+		t.Fatalf("\nexpected: ->%s\ngot: %s\n", expected, body)
+	}
+
+	fmt.Printf("%v\n", string(body))
+
 }
