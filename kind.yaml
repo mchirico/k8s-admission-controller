@@ -11,4 +11,7 @@ kubeadmConfigPatches:
         "enable-admission-plugins": "NamespaceLifecycle,LimitRanger,ServiceAccount,TaintNodesByCondition,Priority,DefaultTolerationSeconds,DefaultStorageClass,PersistentVolumeClaimResize,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota"
 nodes:
   - role: control-plane
+    extraMounts:
+    - hostPath: /pod-10g/
+      containerPath: /pod-10g
   - role: worker
