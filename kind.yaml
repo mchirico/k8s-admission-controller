@@ -15,3 +15,10 @@ nodes:
     - hostPath: /pod-10g/
       containerPath: /pod-10g
   - role: worker
+    extraMounts:
+    - hostPath: /pod-10g/
+      containerPath: /pod-10g
+  - role: worker
+    extraMounts:
+    - hostPath: /pod-10g/
+      containerPath: /pod-10g      
